@@ -41,3 +41,37 @@ whois -h bgp.tools "[your IP here]"
 ```
 
 Trust any IP belonging to your ISP's ASN rather than pinning a specific IP.
+
+## Prerequisites
+
+### Operating system
+- Linux (any modern distro). The script uses GNU `find -mmin`, `stat -c %Y`,
+  and `sha256sum`. macOS/BSD are not supported.
+
+### Runtime packages
+- `bash` ≥ 3.0 (for `set -o pipefail`)
+- `whois` — any standard client; `-4`/`-6` flags are not required
+- `mmdb-bin` — provides `mmdblookup`
+- `util-linux` — provides `logger`
+- Coreutils: `find`, `stat`, `date`, `cut`, `sha256sum`, `mktemp`, `timeout`
+- Standard text tools: `awk` (gawk), `sed`, `grep`, `head`, `tr`
+
+On Debian/Ubuntu: `apt install whois mmdb-bin`
+
+### GeoIP data
+- MaxMind `GeoLite2-Country.mmdb`
+- A free MaxMind license key (signup at
+  [maxmind.com](https://www.maxmind.com/en/geolite2/signup))
+- `geoipupdate` running on a schedule (cron / systemd timer) to keep the
+  database current — the MMDB ages quickly otherwise
+- I am actually doing this from inside Docker, but I won't detail that here.
+
+### Network egress
+- **TCP/43** to `bgp.tools` for whois lookups
+- **HTTPS** to `download.maxmind.com` if you automate MMDB refreshes
+
+The script fails open if whois is unreachable, but you won't be enforcing
+the ASN rule in that state.
+
+### SSH server
+- The filter must run as a user that can read the MMDB file.
