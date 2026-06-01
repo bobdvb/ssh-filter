@@ -18,10 +18,10 @@ Connections are filtered in two stages:
    sudo chmod 755 /usr/local/bin/ssh-filter.sh
 ```
 
-2. Edit the script and set your allowed countries and ASNs:
+2. Edit the script and set your allowed countries and ASNs (numbers only):
 ```bash
    ALLOW_COUNTRIES=("GB" "US")
-   ALLOW_ASNS=("AS12345")
+   ALLOW_ASNS=("12345")
 ```
 
 3. Configure `hosts.allow` to invoke the filter:
